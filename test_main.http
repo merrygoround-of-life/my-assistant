@@ -1,0 +1,23 @@
+# Test your FastAPI endpoints
+
+GET http://127.0.0.1:8000/
+Accept: application/json
+
+###
+
+GET http://127.0.0.1:8000/hello/User
+Accept: application/json
+
+###
+
+POST http://127.0.0.1:8000/api/v1/translate
+Content-Type: application/json
+Accept: text/event-stream
+
+{
+  "input": "일련의 값들을 가지고 있는 자료구조를 구성할 때, 대부분 '슬라이스'를 사용한다.",
+  "from_lang": "korean",
+  "to_lang": "english"
+}
+
+###
