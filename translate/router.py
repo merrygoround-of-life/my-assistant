@@ -13,7 +13,7 @@ logger = getLogger()
 TranslateServiceDep = Annotated[TranslateService, Depends()]
 
 
-@router.post("/translate")
+@router.post(path="")
 async def translate(translate_request: TranslateRequest, translate_service: TranslateServiceDep):
     return StreamingResponse(content=translate_service.translate(translate_request),
                              media_type="text/event-stream")
