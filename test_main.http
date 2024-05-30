@@ -1,11 +1,6 @@
 # Test your FastAPI endpoints
 
-GET http://127.0.0.1:8000/
-Accept: application/json
-
-###
-
-GET http://127.0.0.1:8000/hello/User
+POST http://127.0.0.1:8000/initdb
 Accept: application/json
 
 ###
@@ -19,5 +14,52 @@ Accept: text/event-stream
   "from_lang": "korean",
   "to_lang": "english"
 }
+
+###
+
+POST http://127.0.0.1:8000/api/v1/entity/user
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Isaac Park",
+  "email": "merrygoroundof@naver.com"
+}
+
+###
+
+GET http://127.0.0.1:8000/api/v1/entity/user/1
+Accept: application/json
+
+###
+
+DELETE http://127.0.0.1:8000/api/v1/entity/user/1
+Accept: application/json
+
+###
+
+POST http://127.0.0.1:8000/api/v1/entity/subject
+Content-Type: application/json
+Accept: application/json
+
+{
+  "topic": "Science",
+  "userId": 1
+}
+
+###
+
+GET http://127.0.0.1:8000/api/v1/entity/subject/1
+Accept: application/json
+
+###
+
+GET http://127.0.0.1:8000/api/v1/entity/subject?user_id=1
+Accept: application/json
+
+###
+
+DELETE http://127.0.0.1:8000/api/v1/entity/subject/1
+Accept: application/json
 
 ###

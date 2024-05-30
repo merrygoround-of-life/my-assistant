@@ -1,4 +1,7 @@
-fastapi
-uvicorn[standard]
+asyncpg
+fastapi[all]
+greenlet
 langchain
 langchain-openai
+sqlmodel
+uvicorn[standard]
