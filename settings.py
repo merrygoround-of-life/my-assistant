@@ -8,6 +8,12 @@ class Settings(BaseSettings):
     pg_password: str = "postgres"
     pg_database: str = "my-assistant"
 
+    mg_host: str = "localhost"
+    mg_port: int = 27017
+    mg_username: str = "mongo"
+    mg_password: str = "mongo"
+    mg_database: str = "my-assistant"
+
     model_config = SettingsConfigDict(env_file=".env")
 
 

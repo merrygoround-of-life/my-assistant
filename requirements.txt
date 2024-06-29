@@ -3,5 +3,6 @@ fastapi[all]
 greenlet
 langchain
 langchain-openai
+motor
 sqlmodel
 uvicorn[standard]
