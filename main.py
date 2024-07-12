@@ -5,6 +5,7 @@ from fastapi import FastAPI
 from database import init_db
 from entity.router import router as entity_router
 from history.service import HistoryService
+from chat.router import router as chat_router
 from translate.router import router as translate_router
 
 
@@ -21,6 +22,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 app.include_router(entity_router, prefix="/api/v1/entity", tags=["entity"])
+app.include_router(chat_router, prefix="/api/v1/chat", tags=["chat"])
 app.include_router(translate_router, prefix="/api/v1/translate", tags=["translation"])
 
 

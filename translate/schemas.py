@@ -1,11 +1,6 @@
-from pydantic import BaseModel
+from chat.schemas import ChatRequest, ChatChunkResponse
 
 
-class TranslateRequest(BaseModel):
-    input: str
+class TranslateRequest(ChatRequest):
     from_lang: str
     to_lang: str
-
-
-class TranslateChunkResponse(BaseModel):
-    output: str
