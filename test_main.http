@@ -5,6 +5,16 @@ Accept: application/json
 
 ###
 
+POST http://127.0.0.1:8000/api/v1/chat/user/1/subject/1
+Content-Type: application/json
+Accept: text/event-stream
+
+{
+  "input": "I went out and had delicious Naengmyeon for lunch."
+}
+
+###
+
 POST http://127.0.0.1:8000/api/v1/translate/user/1/subject/1
 Content-Type: application/json
 Accept: text/event-stream

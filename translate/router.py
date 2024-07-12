@@ -20,7 +20,7 @@ async def translate(user_id: int,
                     subject_id: int,
                     translate_request: TranslateRequest,
                     translate_service: TranslateServiceDep):
-    return StreamingResponse(content=translate_service.translate(user_id=user_id,
-                                                                 subject_id=subject_id,
-                                                                 request=translate_request),
+    return StreamingResponse(content=translate_service.chat(user_id=user_id,
+                                                            subject_id=subject_id,
+                                                            request=translate_request),
                              media_type="text/event-stream")
