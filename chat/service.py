@@ -1,42 +1,49 @@
 from typing import Annotated
 
-from fastapi import Depends
+from fastapi import Depends, HTTPException
 from langchain_core.messages import SystemMessage, HumanMessage, BaseMessage, BaseMessageChunk
 from langchain_core.messages.utils import message_chunk_to_message, convert_to_messages
 from langchain_openai import ChatOpenAI
 
+from entity.models import Subject
+from entity.service import SubjectService
 from history.models import History
 from history.service import HistoryService
 from chat.schemas import ChatRequest, ChatChunkResponse
 
+SubjectServiceDep = Annotated[SubjectService, Depends()]
 HistoryServiceDep = Annotated[HistoryService, Depends()]
 
 
 class ChatService:
-    def __init__(self, history_service: HistoryServiceDep):
+    _OPENAI_MODEL_CHAT = "gpt-4o-mini"
+
+    def __init__(self, subject_service: SubjectServiceDep, history_service: HistoryServiceDep):
+        self._subject_service = subject_service
         self._history_service = history_service
-        self._client = ChatOpenAI(model="gpt-3.5-turbo")
+        self._client = ChatOpenAI(model=self._OPENAI_MODEL_CHAT)
 
-    def get_system_message(self) -> SystemMessage:
-        return SystemMessage(content="You are a helpful assistant.")
+    async def _generate_messages(self, subject: Subject, request: ChatRequest) -> list[BaseMessage]:
+        messages: list[BaseMessage] = [SystemMessage(content=f"You are {subject.system_role}.")]
 
-    def get_human_messages(self, request: ChatRequest) -> list[HumanMessage]:
-        return [
-            HumanMessage(content=request.input)
-        ]
-
-    async def chat(self, user_id: int, subject_id: int, request: ChatRequest) -> str:
-        messages: list[BaseMessage] = [self.get_system_message()]
-
-        async for history in self._history_service.get_history(user_id=user_id, subject_id=subject_id):
+        async for history in self._history_service.get_history(user_id=subject.user_id, subject_id=subject.id):
             messages += convert_to_messages([history.message])
 
-        human_messages = self.get_human_messages(request)
+        human_messages = self.get_prompt_messages(subject, request)
 
         for human_message in human_messages:
             messages.append(human_message)
-            history = History(user=user_id, subject=subject_id, message=human_message.dict())
+            history = History(user=subject.user_id, subject=subject.id, message=human_message.dict())
             await self._history_service.add_history(history)
+
+        return messages
+
+    async def chat(self, user_id: int, subject_id: int, request: ChatRequest) -> str:
+        subject = await self._subject_service.get_by_id(subject_id)
+        if not subject or (await subject.awaitable_attrs.user).id != user_id:
+            raise HTTPException(status_code=400, detail="subject or user id not found.")
+
+        messages = await self._generate_messages(subject, request)
 
         merged: BaseMessageChunk | None = None
         async for chunk in self._client.astream(input=messages):
@@ -50,3 +57,15 @@ class ChatService:
                 merged = merged + chunk if merged else chunk
 
             yield f"data: {ChatChunkResponse(output=chunk.content).model_dump_json()}\n\n"
+
+    @staticmethod
+    def get_prompt_messages(subject: Subject, request: ChatRequest) -> list[HumanMessage]:
+        template = subject.prompt_template
+
+        for item in request.params.items():
+            template = template.replace(f"{{{item[0]}}}", item[1])
+
+        messages = [HumanMessage(content=template)] if template else []
+        messages.append(HumanMessage(content=request.input))
+
+        return messages

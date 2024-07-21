@@ -20,6 +20,8 @@ class User(BaseEntity, table=True):
 class Subject(BaseEntity, table=True):
     id: int | None = Field(default=None, primary_key=True)
     topic: str
+    system_role: str = Field(default="a helpful assistant", alias="systemRole")
+    prompt_template: str = Field(default="", alias="promptTemplate")
     user_id: int | None = Field(default=None, foreign_key="user.id", alias="userId")
 
     user: User | None = Relationship(back_populates="subjects")
