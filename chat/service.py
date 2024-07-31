@@ -1,3 +1,4 @@
+from os import environ
 from typing import Annotated, Any
 
 from fastapi import Depends, HTTPException
@@ -57,7 +58,11 @@ class ChatService:
             else:
                 merged = merged + chunk if merged else chunk
 
-            yield f"data: {ChatChunkResponse(output=chunk.content).model_dump_json()}\n\n"
+            if "IGNORE_SSE_FORMAT" in environ and bool(environ["IGNORE_SSE_FORMAT"]):
+                output = f"{chunk.content}"
+            else:
+                output = f"data: {ChatChunkResponse(output=chunk.content).model_dump_json()}\n\n"
+            yield output
 
     @staticmethod
     def get_prompt_messages(subject: Subject, template_params: dict[str, Any]) -> list[HumanMessage]:
