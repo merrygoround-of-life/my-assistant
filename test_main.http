@@ -53,6 +53,32 @@ Accept: application/json
 
 ###
 
+POST http://127.0.0.1:8000/api/v1/entity/subject
+Content-Type: application/json
+Accept: application/json
+
+{
+  "topic": "Paraphrase",
+  "systemRole": "an assistant that helps paraphrase texts to match the requested level",
+  "promptTemplate": "Please paraphrase the following text to match the CEFR {level} level:",
+  "userId": 1
+}
+
+###
+
+POST http://127.0.0.1:8000/api/v1/entity/subject
+Content-Type: application/json
+Accept: application/json
+
+{
+  "topic": "Grammar",
+  "systemRole": "an assistant that explains English sentence structures grammatically",
+  "promptTemplate": "Please explain the following sentence structure grammatically in Korean so that a CEFR {level} learner can understand it:",
+  "userId": 1
+}
+
+###
+
 POST http://127.0.0.1:8000/api/v1/chat/user/1/subject/1
 Content-Type: application/json
 Accept: text/event-stream
@@ -97,6 +123,43 @@ Accept: text/event-stream
 
 {
   "input": "Prompt 를 Subject 정보를 참조하여 생성하도록 수정"
+}
+
+###
+
+POST http://127.0.0.1:8000/api/v1/chat/user/1/subject/4
+Content-Type: application/json
+Accept: text/event-stream
+
+{
+  "params":{
+    "level": "A1"
+  },
+  "input": "A spokesperson for the Secret Service said in a statement Saturday that the agency has not provided certain resources in the past but has instead provided other security measures including from local partners. The news comes amid widespread concerns about how a sniper was able to obtain rooftop access roughly 150 meters from Trump’s position at an outdoor rally in Butler, Pennsylvania, last week."
+}
+
+###
+
+POST http://127.0.0.1:8000/api/v1/chat/user/1/subject/5
+Content-Type: application/json
+Accept: text/event-stream
+
+{
+  "params":{
+    "level": "A1"
+  },
+  "input": "The madder the Hulk gets, the stronger he gets."
+}
+
+###
+
+POST http://127.0.0.1:8000/api/v1/chat/user/1/subject/5
+Content-Type: application/json
+Accept: text/event-stream
+
+{
+  "input": "madder 나 stronger 앞에 the 는 왜 붙는거야?",
+  "without_prompt": true
 }
 
 ###

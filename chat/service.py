@@ -1,4 +1,4 @@
-from typing import Annotated
+from typing import Annotated, Any
 
 from fastapi import Depends, HTTPException
 from langchain_core.messages import SystemMessage, HumanMessage, BaseMessage, BaseMessageChunk
@@ -29,7 +29,8 @@ class ChatService:
         async for history in self._history_service.get_history(user_id=subject.user_id, subject_id=subject.id):
             messages += convert_to_messages([history.message])
 
-        human_messages = self.get_prompt_messages(subject, request)
+        human_messages = self.get_prompt_messages(subject, request.params) if not request.without_prompt else []
+        human_messages.append(HumanMessage(content=request.input))
 
         for human_message in human_messages:
             messages.append(human_message)
@@ -38,7 +39,7 @@ class ChatService:
 
         return messages
 
-    async def chat(self, user_id: int, subject_id: int, request: ChatRequest) -> str:
+    async def chat(self, user_id: int, subject_id: int, request: ChatRequest):
         subject = await self._subject_service.get_by_id(subject_id)
         if not subject or (await subject.awaitable_attrs.user).id != user_id:
             raise HTTPException(status_code=400, detail="subject or user id not found.")
@@ -59,13 +60,12 @@ class ChatService:
             yield f"data: {ChatChunkResponse(output=chunk.content).model_dump_json()}\n\n"
 
     @staticmethod
-    def get_prompt_messages(subject: Subject, request: ChatRequest) -> list[HumanMessage]:
+    def get_prompt_messages(subject: Subject, template_params: dict[str, Any]) -> list[HumanMessage]:
         template = subject.prompt_template
 
-        for item in request.params.items():
-            template = template.replace(f"{{{item[0]}}}", item[1])
+        for key, value in template_params.items():
+            template = template.replace(f"{{{key}}}", value)
 
         messages = [HumanMessage(content=template)] if template else []
-        messages.append(HumanMessage(content=request.input))
 
         return messages
