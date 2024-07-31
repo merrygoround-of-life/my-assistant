@@ -42,8 +42,8 @@ async def create_subject(subject: Subject, subject_service: SubjectServiceDep) -
 
 
 @router.get(path="/subject")
-async def list_subject_by_user_id(user_id: int, subject_service: SubjectServiceDep) -> list[Subject]:
-    return await subject_service.list_by_user_id(user_id)
+async def list_subject_by_owner_id(owner_id: int, subject_service: SubjectServiceDep) -> list[Subject]:
+    return await subject_service.list_by_owner_id(owner_id)
 
 
 @router.get(path="/subject/{subject_id}")

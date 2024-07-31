@@ -33,8 +33,8 @@ class SubjectService:
     async def get_by_id(self, subject_id: int) -> Subject | None:
         return await self._repository.get_by_id(subject_id)
 
-    async def list_by_user_id(self, user_id: int) -> list[Subject]:
-        return await self._repository.list_by_user_id(user_id)
+    async def list_by_owner_id(self, owner_id: int) -> list[Subject]:
+        return await self._repository.list_by_owner_id(owner_id)
 
     async def delete(self, subject: Subject) -> None:
         return await self._repository.delete(subject)

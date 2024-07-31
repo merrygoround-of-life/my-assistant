@@ -43,8 +43,8 @@ class SubjectRepository:
         result = (await self._session.exec(statement)).first()
         return result
 
-    async def list_by_user_id(self, user_id: int) -> list[Subject]:
-        statement = select(Subject).join(User).where(User.id == user_id)
+    async def list_by_owner_id(self, owner_id: int) -> list[Subject]:
+        statement = select(Subject).join(User).where(User.id == owner_id)
         result = list((await self._session.exec(statement)).all())
         return result
 

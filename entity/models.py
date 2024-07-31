@@ -14,7 +14,7 @@ class User(BaseEntity, table=True):
     name: str
     email: str
 
-    subjects: list["Subject"] = Relationship(back_populates="user")
+    proposals: list["Subject"] = Relationship(back_populates="owner")
 
 
 class Subject(BaseEntity, table=True):
@@ -22,6 +22,6 @@ class Subject(BaseEntity, table=True):
     topic: str
     system_role: str = Field(default="a helpful assistant", alias="systemRole")
     prompt_template: str = Field(default="", alias="promptTemplate")
-    user_id: int | None = Field(default=None, foreign_key="user.id", alias="userId")
+    owner_id: int | None = Field(default=None, foreign_key="user.id", alias="ownerId")
 
-    user: User | None = Relationship(back_populates="subjects")
+    owner: User | None = Relationship(back_populates="proposals")
