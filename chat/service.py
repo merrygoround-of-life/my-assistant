@@ -6,7 +6,7 @@ from langchain_core.messages import SystemMessage, HumanMessage, BaseMessage, Ba
 from langchain_core.messages.utils import message_chunk_to_message, convert_to_messages
 from langchain_openai import ChatOpenAI
 
-from entity.models import Subject
+from entity.models import Subject, User
 from entity.service import SubjectService, UserService
 from history.models import History
 from history.service import HistoryService
@@ -45,13 +45,19 @@ class ChatService:
 
         return messages
 
-    async def chat(self, user_id: int, subject_id: int, request: ChatRequest):
+    async def check_auth(self, user_id: int, subject_id: int) -> tuple[User, Subject]:
         user = await self._user_service.get_by_id(user_id)
         subject = await self._subject_service.get_by_id(subject_id)
         if not user or not subject:
-            raise HTTPException(status_code=400, detail="user or subject not found.")
+            raise HTTPException(status_code=404, detail="User or subject not found.")
 
-        messages = await self._generate_messages(user_id, subject, request)
+        if (await user.awaitable_attrs.group) not in (await subject.awaitable_attrs.groups):
+            raise HTTPException(status_code=403, detail="Using subject by the user is forbidden.")
+
+        return user, subject
+
+    async def chat(self, user: User, subject: Subject, request: ChatRequest):
+        messages = await self._generate_messages(user.id, subject, request)
 
         merged: BaseMessageChunk | None = None
         async for chunk in self._client.astream(input=messages):
@@ -59,7 +65,7 @@ class ChatService:
             if response_meta and "finish_reason" in response_meta and response_meta["finish_reason"] == "stop":
                 if merged:
                     message = message_chunk_to_message(merged)
-                    history = History(user=user_id, subject=subject_id, message=message.dict())
+                    history = History(user=user.id, subject=subject.id, message=message.dict())
                     await self._history_service.add_history(history)
             else:
                 merged = merged + chunk if merged else chunk

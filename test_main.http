@@ -5,13 +5,25 @@ Accept: application/json
 
 ###
 
+POST http://127.0.0.1:8000/api/v1/entity/group
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Plantrue Group",
+  "email": "plantrue@kakao.com"
+}
+
+###
+
 POST http://127.0.0.1:8000/api/v1/entity/user
 Content-Type: application/json
 Accept: application/json
 
 {
   "name": "Isaac Park",
-  "email": "merrygoroundof@naver.com"
+  "email": "merrygoroundof@naver.com",
+  "groupId": 1
 }
 
 ###
@@ -76,6 +88,31 @@ Accept: application/json
   "promptTemplate": "Please explain the following sentence structure grammatically in Korean so that a CEFR {level} learner can understand it:",
   "ownerId": 1
 }
+
+###
+
+PUT http://127.0.0.1:8000/api/v1/entity/group/1/subject/1
+Accept: application/json
+
+###
+
+PUT http://127.0.0.1:8000/api/v1/entity/group/1/subject/2
+Accept: application/json
+
+###
+
+PUT http://127.0.0.1:8000/api/v1/entity/group/1/subject/3
+Accept: application/json
+
+###
+
+PUT http://127.0.0.1:8000/api/v1/entity/group/1/subject/4
+Accept: application/json
+
+###
+
+PUT http://127.0.0.1:8000/api/v1/entity/group/1/subject/5
+Accept: application/json
 
 ###
 

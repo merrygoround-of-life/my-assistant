@@ -5,9 +5,28 @@ from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
 from database import get_db_session
-from entity.models import User, Subject
+from entity.models import User, Subject, Group
 
 SessionDep = Annotated[AsyncSession, Depends(get_db_session)]
+
+
+class GroupRepository:
+    def __init__(self, session: SessionDep):
+        self._session = session
+
+    async def create(self, group: Group) -> Group:
+        self._session.add(group)
+        await self._session.flush()
+        return group
+
+    async def get_by_id(self, group_id: int) -> Group | None:
+        statement = select(Group).where(Group.id == group_id)
+        result = (await self._session.exec(statement)).first()
+        return result
+
+    async def delete(self, group: Group) -> None:
+        await self._session.delete(group)
+        await self._session.flush()
 
 
 class UserRepository:
