@@ -4,9 +4,9 @@ from typing import Annotated
 from fastapi import APIRouter, Depends
 from fastapi.responses import StreamingResponse
 
-from chat.schemas import ChatRequest
-from chat.service import ChatService
-from history.service import HistoryService
+from .schemas import ChatRequest
+from .service import ChatService
+from ..history.service import HistoryService
 
 router = APIRouter()
 logger = getLogger()

@@ -3,10 +3,10 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 
-from database import init_db
-from entity.router import router as entity_router
-from history.service import HistoryService
-from chat.router import router as chat_router
+from .database import init_db
+from .entity.router import router as entity_router
+from .history.service import HistoryService
+from .chat.router import router as chat_router
 
 
 @asynccontextmanager

@@ -4,8 +4,8 @@ from typing import Annotated
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.responses import JSONResponse
 
-from entity.models import User, Subject, Group
-from entity.service import UserService, SubjectService, GroupService, GroupSubjectLinkService
+from .models import User, Subject, Group
+from .service import UserService, SubjectService, GroupService, GroupSubjectLinkService
 
 router = APIRouter()
 logger = getLogger()

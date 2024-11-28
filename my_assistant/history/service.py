@@ -1,7 +1,7 @@
 from motor.motor_asyncio import AsyncIOMotorClient
 
-from history.models import History
-from settings import settings
+from .models import History
+from ..settings import settings
 
 
 class HistoryService:

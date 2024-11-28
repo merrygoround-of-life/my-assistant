@@ -2,7 +2,7 @@ from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
 from sqlmodel import SQLModel
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from settings import settings
+from .settings import settings
 
 _DATABASE_URL = "postgresql+asyncpg://{username}:{password}@{host}:{port}/{database}"
 
@@ -16,7 +16,7 @@ _async_session_factory = async_sessionmaker(bind=_engine, class_=AsyncSession, e
 
 
 async def init_db() -> None:
-    import entity.models   # noqa
+    from .entity import models   # noqa
     async with _engine.begin() as conn:
         await conn.run_sync(SQLModel.metadata.create_all)
 

@@ -2,8 +2,8 @@ from typing import Annotated
 
 from fastapi import Depends, HTTPException
 
-from entity.models import User, Subject, Group
-from entity.repository import UserRepository, SubjectRepository, GroupRepository
+from .models import User, Subject, Group
+from .repository import UserRepository, SubjectRepository, GroupRepository
 
 UserRepositoryDep = Annotated[UserRepository, Depends()]
 SubjectRepositoryDep = Annotated[SubjectRepository, Depends()]
