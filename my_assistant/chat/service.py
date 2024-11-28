@@ -6,11 +6,11 @@ from langchain_core.messages import SystemMessage, HumanMessage, BaseMessage, Ba
 from langchain_core.messages.utils import message_chunk_to_message, convert_to_messages
 from langchain_openai import ChatOpenAI
 
-from entity.models import Subject, User
-from entity.service import SubjectService, UserService
-from history.models import History
-from history.service import HistoryService
-from chat.schemas import ChatRequest, ChatChunkResponse
+from ..entity.models import Subject, User
+from ..entity.service import SubjectService, UserService
+from ..history.models import History
+from ..history.service import HistoryService
+from .schemas import ChatRequest, ChatChunkResponse
 
 UserServiceDep = Annotated[UserService, Depends()]
 SubjectServiceDep = Annotated[SubjectService, Depends()]

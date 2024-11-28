@@ -4,8 +4,8 @@ from fastapi import Depends
 from sqlmodel import select
 from sqlmodel.ext.asyncio.session import AsyncSession
 
-from database import get_db_session
-from entity.models import User, Subject, Group
+from ..database import get_db_session
+from .models import User, Subject, Group
 
 SessionDep = Annotated[AsyncSession, Depends(get_db_session)]
 

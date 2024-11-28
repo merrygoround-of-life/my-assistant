@@ -1,8 +1,15 @@
-version: "3"
-
 name: "my-assistant"
 
 services:
+  agent:
+    build:
+      context: ../.
+      dockerfile: ./docker/Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+
   postgres:
     image: postgres:16
     restart: always
@@ -29,7 +36,8 @@ services:
     ports:
       - "27017:27017"
     volumes:
-      - ./volumes/mongo:/data/db
+      - ./volumes/mongo/db:/data/db
+      - ./volumes/mongo/configdb:/data/configdb
     environment:
       MONGO_INITDB_ROOT_USERNAME: mongo
       MONGO_INITDB_ROOT_PASSWORD: mongo
