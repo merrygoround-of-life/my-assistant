@@ -2,13 +2,13 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    pg_host: str = "localhost"
+    pg_host: str = "postgres"
     pg_port: int = 5432
     pg_username: str = "postgres"
     pg_password: str = "postgres"
     pg_database: str = "my-assistant"
 
-    mg_host: str = "localhost"
+    mg_host: str = "mongo"
     mg_port: int = 27017
     mg_username: str = "mongo"
     mg_password: str = "mongo"
